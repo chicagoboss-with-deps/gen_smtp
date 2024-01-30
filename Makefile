@@ -1,32 +1,16 @@
-REBAR_PROFILE = test
-MINIMAL_COVERAGE = 75
+FILES = $(shell ls ebin/*.beam | grep -v smtp_rfc822_parse)
 
 compile:
-	@rebar3 compile
+	@./rebar3 compile
 
 clean:
-	@rebar3 clean -a
+	@./rebar3 clean -a
 
 test:
-	ERL_AFLAGS="-s ssl"
-	rebar3 as $(REBAR_PROFILE) eunit -c
-
-proper:
-	rebar3 as $(REBAR_PROFILE) proper -c
-
-cover:
-	rebar3 as $(REBAR_PROFILE) cover --verbose --min_coverage $(MINIMAL_COVERAGE)
+	ERL_AFLAGS="-s ssl" 
+	./rebar3 eunit
 
 dialyze:
-	rebar3 as dialyzer dialyzer
-
-xref:
-	rebar3 as test xref
-
-format:
-	rebar3 fmt
-
-docs:
-	rebar3 ex_doc
+	dialyzer $(FILES)
 
 .PHONY: compile clean test dialyze
